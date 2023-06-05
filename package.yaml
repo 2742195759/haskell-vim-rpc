@@ -59,7 +59,7 @@ executables:
     - select
     - containers
     - transformers
-    - http
+    - HTTP
 
 tests:
   vim-rpc-test:

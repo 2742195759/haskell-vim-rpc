@@ -23,6 +23,8 @@ import Foreign.C.Types (CInt)
 import Control.Monad.Trans.Class (lift)
 import Data.Map as M
 
+data SelectKey = 
+
 type Handle = (Socket -> SelectMonad ())
 type SockMap = M.Map Foreign.C.Types.CInt (Socket, Handle)
 data SelectEnv = SelectEnv {
@@ -71,11 +73,12 @@ sendDataToSocket from to = do
     else do
       lift $ sendAll to msg
 
-initProcess :: Handle -> SelectMonad ()
-initProcess listenHandle = do 
+initProcess :: SelectMonad () -> Handle -> SelectMonad ()
+initProcess initHandle listenHandle = do 
     addr <- lift $ resolve "127.0.0.1" "3000"
     server <- lift $ doListen addr
     selectInsert server listenHandle 
+    initHandle
   where 
     resolve host port = do
         let hints = defaultHints { addrSocketType = Stream }
@@ -94,11 +97,11 @@ initProcess listenHandle = do
         return sock
 
     
-startSelect :: Handle -> IO ()
-startSelect listenHandle = withSocketsDo $ do
+startSelect :: SelectMonad () -> Handle -> IO ()
+startSelect initHandle listenHandle = withSocketsDo $ do
     {-E.bracket (open addr) close loop-}
     print ("start select server ...")
-    loop $ initProcess listenHandle  
+    loop $ initProcess initHandle listenHandle  
   where
     loop :: SelectMonad() -> IO ()
     loop init = do 

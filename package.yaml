@@ -35,6 +35,13 @@ ghc-options:
 
 library:
   source-dirs: src
+  dependencies:
+  - socket
+  - network
+  - bytestring
+  - select
+  - containers
+  - transformers
 
 executables:
   vim-rpc-exe:
@@ -51,6 +58,7 @@ executables:
     - bytestring
     - select
     - containers
+    - transformers
 
 tests:
   vim-rpc-test:

@@ -19,13 +19,19 @@ import Control.Monad.Trans.State.Lazy (StateT, modify, runStateT, get)
 import Foreign.C.Types (CInt)
 import Control.Monad.Trans.Class (lift)
 import Data.Map as M
+import Network.Stream (Stream(..))
 
 
 listenHandle :: Handle
 listenHandle sock = do
     (conn, _) <- lift $ accept sock
+    oneline <- lift . readLine $ sock
+    if oneline == C.pack "xiongkun\n" then 
+      lift . print $ "Receive xiongkun."
+    else E.throw $ AssertionFailed "not xiongkun"
     (SelectEnv _) <- get
     selectInsert conn echoHandle
+
 
 main :: IO ()
 main = startSelect listenHandle

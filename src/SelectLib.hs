@@ -23,8 +23,6 @@ import Foreign.C.Types (CInt)
 import Control.Monad.Trans.Class (lift)
 import Data.Map as M
 
-data SelectKey = 
-
 type Handle = (Socket -> SelectMonad ())
 type SockMap = M.Map Foreign.C.Types.CInt (Socket, Handle)
 data SelectEnv = SelectEnv {

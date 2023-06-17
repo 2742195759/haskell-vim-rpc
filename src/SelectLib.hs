@@ -43,7 +43,6 @@ selectRemove sock = do
     fd <- lift $ fdSocket sock
     modify $ \(SelectEnv map) -> 
         SelectEnv $ M.delete fd map
-    lift $ close sock
 
 
 echoHandle :: Handle
